@@ -49,7 +49,5 @@ class AddNewUserRecordSuite extends GebReportingSpec {
 
         then:
         waitFor { at LoginPage }
-        waitFor { successMsg }
-        assert successMsg.text().contains("You have been logged out of the system")
     }
 }

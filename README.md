@@ -1,4 +1,4 @@
-# matosoft-poc
+# MatSoft Proof of concept
 
 [![Build Status][build_status]](https://snap-ci.com/ochubey/matosoft-poc/branch/master)
 

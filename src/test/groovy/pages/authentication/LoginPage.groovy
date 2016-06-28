@@ -1,4 +1,4 @@
-package pages
+package pages.authentication
 
 import geb.Page
 

@@ -21,6 +21,6 @@ autoClearCookies = true
 baseUrl = "https://thomascook-uat.onmats.com"
 
 waiting {
-    timeout = 10
+    timeout = 30
     retryInterval = 0.5
 }

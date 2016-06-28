@@ -3,7 +3,6 @@ package specifications
 import geb.spock.GebReportingSpec
 import pages.authentication.LoginPage
 import pages.authentication.LogoutPage
-import spock.lang.Ignore
 
 /**
  * Created by Oleksiy on 27.06.2016.
@@ -18,7 +17,6 @@ class AuthenticationSuite extends GebReportingSpec {
         at LoginPage
     }
 
-    @Ignore
     def "Login with empty credentials"() {
         when:
         doLogin("", "")
@@ -27,7 +25,6 @@ class AuthenticationSuite extends GebReportingSpec {
         assert errorMsg.text().contains("Failed to login using credentials supplied")
     }
 
-    @Ignore
     def "Login with incorrect login name"() {
         when:
         doLogin("incorrectLogin", password)
@@ -36,7 +33,6 @@ class AuthenticationSuite extends GebReportingSpec {
         assert errorMsg.text().contains("Failed to login using credentials supplied")
     }
 
-    @Ignore
     def "Login with incorrect password"() {
         when:
         doLogin(loginName, "incorrectPassword")
@@ -45,7 +41,6 @@ class AuthenticationSuite extends GebReportingSpec {
         assert errorMsg.text().contains("Failed to login using credentials supplied")
     }
 
-    @Ignore
     def "Login/Logout with correct credentials"() {
         when:
         doLogin(loginName, password)

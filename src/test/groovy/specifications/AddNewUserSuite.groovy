@@ -34,7 +34,7 @@ class AddNewUserSuite extends GebReportingSpec {
 
     def "Add new Rep"() {
         given:
-        to UserAdministrationPage
+        go UserAdministrationPage.url
 
         when:
         waitFor { at UserAdministrationPage }
@@ -49,7 +49,7 @@ class AddNewUserSuite extends GebReportingSpec {
 
     def "Edit existing Rep"() {
         given:
-        to UserAdministrationPage
+        go UserAdministrationPage.url
 
         when:
         waitFor { at UserAdministrationPage }
@@ -64,7 +64,7 @@ class AddNewUserSuite extends GebReportingSpec {
 
     def "Delete all Rep by email"() {
         given:
-        to UsersPage
+        go UsersPage.url
 
         when:
         waitFor { at UsersPage }

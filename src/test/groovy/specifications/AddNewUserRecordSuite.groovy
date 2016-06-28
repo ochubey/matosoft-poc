@@ -12,11 +12,12 @@ class AddNewUserRecordSuite extends GebReportingSpec {
     def loginName = System.getProperty("loginName")
     def password = System.getProperty("password")
 
-    def "Login with empty credentials"() {
-        given:
+    def setup() {
         go()
         at LoginPage
+    }
 
+    def "Login with empty credentials"() {
         when:
         doLogin("", "")
 
@@ -25,9 +26,6 @@ class AddNewUserRecordSuite extends GebReportingSpec {
     }
 
     def "Login with incorrect login name"() {
-        given:
-        at LoginPage
-
         when:
         doLogin("incorrectLogin", password)
 
@@ -36,10 +34,6 @@ class AddNewUserRecordSuite extends GebReportingSpec {
     }
 
     def "Login with incorrect password"() {
-        given:
-        go()
-        at LoginPage
-
         when:
         doLogin(loginName, "incorrectPassword")
 
@@ -48,10 +42,6 @@ class AddNewUserRecordSuite extends GebReportingSpec {
     }
 
     def "Login/Logout with correct credentials"() {
-        given:
-        go()
-        at LoginPage
-
         when:
         doLogin(loginName, password)
         waitFor { at LogoutPage }

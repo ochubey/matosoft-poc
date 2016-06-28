@@ -1,38 +1,62 @@
 group 'com.onmats.thomascook'
 
+import org.apache.tools.ant.taskdefs.condition.Os
+
+ext {
+    drivers = ["firefox", "chrome"]
+
+    ext {
+        groovyVersion = '2.4.5'
+        gebVersion = '0.13.1'
+        seleniumVersion = '2.52.0'
+        chromeDriverVersion = '2.19'
+    }
+}
+
 apply plugin: 'groovy'
-apply plugin: "idea"
+apply from: "gradle/idea.gradle"
+apply from: "gradle/osSpecificDownloads.gradle"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:2.4.5"
-    compile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0"
-    compile "org.gebish:geb-core:0.13.1"
-    compile "org.seleniumhq.selenium:selenium-firefox-driver:2.52.0"
-    compile "org.seleniumhq.selenium:selenium-support:2.52.0"
-    testCompile "org.gebish:geb-spock:0.13.1"
+    compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+    compile "org.gebish:geb-core:$gebVersion"
+    compile "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
+    testCompile "org.gebish:geb-spock:$gebVersion"
     testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
+    testCompile "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
+    testCompile "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+}
+
+drivers.each { driver ->
+    task "${driver}Test"(type: Test) {
+        systemProperties System.getProperties()
+        reports {
+            html.destination = reporting.file("$name/tests")
+            junitXml.destination = file("$buildDir/test-results/$name")
+        }
+
+        outputs.upToDateWhen { false }
+
+        systemProperty "geb.build.reportsDir", reporting.file("$name/geb")
+        systemProperty "geb.env", driver
+    }
+}
+
+chromeTest {
+    dependsOn unzipChromeDriver
+
+    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
 }
 
 test {
     systemProperties System.getProperties()
-    testLogging {
-        events "passed", "skipped", "failed"
-        exceptionFormat = 'full'
-
-        afterSuite { desc, result ->
-            if (!desc.parent) {
-                def output = "Results: ${result.resultType} (${result.testCount} tests, " +
-                        "${result.successfulTestCount} successes, ${result.failedTestCount} failures, " +
-                        "${result.skippedTestCount} skipped)"
-                def startItem = '|  ', endItem = '  |'
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem +
-                        '\n' + ('-' * repeatLength))
-            }
-        }
-    }
+    dependsOn drivers.collect { tasks["${it}Test"] }
+    enabled = false
 }
+
+apply from: "gradle/ci.gradle"

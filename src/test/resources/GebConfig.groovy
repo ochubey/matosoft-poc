@@ -18,7 +18,7 @@ environments {
 reportsDir = "build/reports/geb"
 reportOnTestFailureOnly = true
 autoClearCookies = true
-baseUrl = "https://thomascook-uat.onmats.com"
+baseUrl = "https://thomascook-qa.onmats.com"
 
 waiting {
     timeout = 30
